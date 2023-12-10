@@ -1,5 +1,7 @@
 package com.mygdx.game.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ListUtil {
@@ -17,5 +19,13 @@ public class ListUtil {
             list.remove(list.size() - 1);
             list.add(0, lastElement);
         }
+    }
+
+    public static void main(String[] args) {
+        List<Integer> arr = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+        shiftListLeft(arr);
+        System.out.println(arr);
+        shiftListLeft(arr);
+        System.out.println(arr);
     }
 }

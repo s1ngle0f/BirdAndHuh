@@ -42,7 +42,7 @@ public class GameScreen implements Screen {
         parallaxBg.put("clouds4Bg", new BackgroundCircle(clouds4, batch, camera, -0.17f));
         bird = new Bird(batch, camera, 136, 226);
         columns = new Columns(batch, camera, 300,
-                6, 0.6f, 0.1f, 0.35f);
+                6, 0.6f, 0.1f, 0.35f, 100, 500);
     }
 
     @Override
@@ -58,8 +58,8 @@ public class GameScreen implements Screen {
         camera.update();
         batch.begin();
         renderBackground(delta);
-        bird.render(delta, time);
         generateColumn(delta);
+        bird.render(delta, time);
         batch.setProjectionMatrix(camera.combined);
         batch.end();
     }
