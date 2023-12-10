@@ -23,6 +23,14 @@ public class Columns {
             this.position = position;
             this.spaceBetween = spaceBetween;
         }
+
+        @Override
+        public String toString() {
+            return "Column{" +
+                    "position=" + position +
+                    ", spaceBetween=" + spaceBetween +
+                    '}';
+        }
     }
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
@@ -51,18 +59,17 @@ public class Columns {
     }
 
     private void firstGeneration() {
-        float heightOfBounds = (1-procentOfVerticalDelta)/2f; //В процентах (0.15, к примеру)
+        float heightOfBounds = (1-procentOfVerticalDelta); //В процентах (0.3, к примеру)
         for(int i = 0; i < count; i++){
             columns.add(
                     new Column(
                             new Vector2(
                                     horizontalSpaceBetween * i + MyGdxGame.WIDTH * 3 / 4,
-                                    random.nextInt(
-                                            (int) (heightOfBounds * MyGdxGame.HEIGHT),
-                                            (int) ((1 - heightOfBounds) * MyGdxGame.HEIGHT) + 1
+                                    procentOfVerticalDelta/2f*MyGdxGame.HEIGHT + random.nextInt(
+                                            (int) (heightOfBounds * MyGdxGame.HEIGHT) + 1
                                     )
                             ),
-                            random.nextFloat(procentMinHole, procentMaxHole)
+                            (float) (procentMinHole + Math.random() * (procentMaxHole - procentMinHole))
                     )
             );
         }
@@ -82,21 +89,24 @@ public class Columns {
 
     private void clearUsefulColumns() {
         for (Column column : columns) {
-            if (column.position.y <= leftBottomPointCamera){
+            if (column.position.x + textureRegion.getTexture().getWidth() <= leftBottomPointCamera){
                 generateNewPositionForColumn(column);
             }
         }
+        ListUtil.<Column>shiftListLeft(columns);
+        for(Column column : columns){
+            System.out.print(column + ", ");
+        }
+        System.out.println("");
     }
 
     private void generateNewPositionForColumn(Column column) {
         Vector2 positionOfLastColumn = columns.get(columns.size() - 1).position;
         column.position.x = positionOfLastColumn.x + horizontalSpaceBetween;
-        float heightOfBounds = (1-procentOfVerticalDelta)/2f; //В процентах (0.15, к примеру)
-        column.position.y = random.nextInt(
-                (int) (heightOfBounds * MyGdxGame.HEIGHT),
-                (int) ((1 - heightOfBounds) * MyGdxGame.HEIGHT) + 1
+        float heightOfBounds = (1-procentOfVerticalDelta); //В процентах (0.15, к примеру)
+        column.position.y = procentOfVerticalDelta/2f*MyGdxGame.HEIGHT + random.nextInt(
+                (int) (heightOfBounds * MyGdxGame.HEIGHT) + 1
         );
-        column.spaceBetween = random.nextFloat(procentMinHole, procentMaxHole);
-        ListUtil.<Column>shiftListLeft(columns);
+        column.spaceBetween = (float) (procentMinHole + Math.random() * (procentMaxHole - procentMinHole));
     }
 }
