@@ -75,11 +75,11 @@ public class Columns {
                     new Column(
                             new Vector2(
                                     horizontalSpaceBetween * i + MyGdxGame.WIDTH * 3 / 4,
-                                    procentOfVerticalDelta/2f*MyGdxGame.HEIGHT + random.nextInt(
-                                            (int) (heightOfBounds * MyGdxGame.HEIGHT) + 1
+                                    heightOfBounds/2f*MyGdxGame.HEIGHT + random.nextInt(
+                                            (int) (procentOfVerticalDelta * MyGdxGame.HEIGHT) + 1
                                     )
                             ),
-                            (float) (procentMinHole + Math.random() * (procentMaxHole - procentMinHole))
+                            (float) (procentMinHole + Math.random() * (procentMaxHole - procentMinHole))*MyGdxGame.HEIGHT
                     )
             );
         }
@@ -94,14 +94,22 @@ public class Columns {
         for(Column column : columns){
             batch.draw(textureRegion,
                     column.position.x,
-                    column.position.y - textureRegion.getTexture().getHeight() - column.spaceBetween/2f
+                    column.position.y - height - column.spaceBetween/2f,
+                    width,
+                    height
+            );
+            batch.draw(textureRegion,
+                    column.position.x,
+                    column.position.y + height + column.spaceBetween/2f,
+                    width,
+                    -height
             );
         }
     }
 
     private void clearUsefulColumns() {
         for (Column column : columns) {
-            if (column.position.x + textureRegion.getTexture().getWidth() <= leftBottomPointCamera){
+            if (column.position.x + width <= leftBottomPointCamera){
                 generateNewPositionForColumn(column);
             }
         }
@@ -116,10 +124,10 @@ public class Columns {
         Vector2 positionOfLastColumn = columns.get(columns.size() - 1).position;
         column.position.x = positionOfLastColumn.x + horizontalSpaceBetween;
         float heightOfBounds = (1-procentOfVerticalDelta); //В процентах (0.15, к примеру)
-        column.position.y = procentOfVerticalDelta/2f*MyGdxGame.HEIGHT + random.nextInt(
-                (int) (heightOfBounds * MyGdxGame.HEIGHT) + 1
+        column.position.y = heightOfBounds/2f*MyGdxGame.HEIGHT + random.nextInt(
+                (int) (procentOfVerticalDelta * MyGdxGame.HEIGHT) + 1
         );
-        column.spaceBetween = (float) (procentMinHole + Math.random() * (procentMaxHole - procentMinHole));
+        column.spaceBetween = (float) (procentMinHole + Math.random() * (procentMaxHole - procentMinHole))*MyGdxGame.HEIGHT;
     }
 
     private void sortByPositionY(List<Column> list){
