@@ -19,9 +19,10 @@ public class GameScreen implements Screen {
     private final Texture sky, rock1, rock2, clouds1, clouds2, clouds3, clouds4;
     private final HashMap<String, BackgroundCircle> parallaxBg = new HashMap<>();
     private Bird bird;
+    private Columns columns;
     private float time = 0;
 
-    public GameScreen(MyGdxGame myGdxGame, SpriteBatch batch, OrthographicCamera camera) {
+    public GameScreen(MyGdxGame myGdxGame, SpriteBatch batch, OrthographicCamera camera) throws Exception {
         this.myGdxGame = myGdxGame;
         this.batch = batch;
         this.camera = camera;
@@ -40,6 +41,8 @@ public class GameScreen implements Screen {
         parallaxBg.put("clouds3Bg", new BackgroundCircle(clouds3, batch, camera, -0.15f));
         parallaxBg.put("clouds4Bg", new BackgroundCircle(clouds4, batch, camera, -0.17f));
         bird = new Bird(batch, camera, 136, 226);
+        columns = new Columns(batch, camera, 300,
+                6, 0.6f, 0.1f, 0.35f);
     }
 
     @Override
@@ -56,25 +59,23 @@ public class GameScreen implements Screen {
         batch.begin();
         renderBackground(delta);
         bird.render(delta, time);
+        generateColumn(delta);
         batch.setProjectionMatrix(camera.combined);
         batch.end();
     }
 
     public void move(){
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            camera.position.add(3, 0, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            camera.position.add(-3, 0, 0);
-        }
-//        if(Gdx.input.justTouched())
-//            myGdxGame.setScreen(myGdxGame.menuScreen);
+        camera.position.add(3, 0, 0);
     }
 
     public void renderBackground(float delta){
         for (BackgroundCircle bgCircle : parallaxBg.values()) {
             bgCircle.render(delta);
         }
+    }
+
+    public void generateColumn(float delta){
+        columns.render(delta);
     }
 
     @Override

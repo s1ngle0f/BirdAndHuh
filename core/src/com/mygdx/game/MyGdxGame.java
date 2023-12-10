@@ -25,7 +25,11 @@ public class MyGdxGame extends Game {
 		camera.setToOrtho(false, WIDTH, HEIGHT);
 
 		huhScreen = new HuhScreen(this, batch, camera);
-		gameScreen = new GameScreen(this, batch, camera);
+		try {
+			gameScreen = new GameScreen(this, batch, camera);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		menuScreen = new MenuScreen(this, batch, camera);
 		setScreen(gameScreen);
 	}

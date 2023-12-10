@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,15 +11,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import java.security.Key;
+
 public class Bird {
     private SpriteBatch batch;
     private OrthographicCamera camera;
-
     private Vector2 duration, position;
     private float speed = 100, width, height;
     Texture atlas;
     Animation<TextureRegion> animation;
-    private Sound huh;
     public Bird(SpriteBatch batch, OrthographicCamera camera, float widthOneFrame, float heightOneFrame) {
         this.batch = batch;
         this.camera = camera;
@@ -50,18 +51,24 @@ public class Bird {
     }
 
     private void moving() {
-        if(Gdx.input.justTouched())
+        if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
             duration.y = 10;
     }
 
     private void calculatePosition(float delta) {
-        position.x = camera.position.x - width/2f;
+        position.x = camera.position.x - width / 2f;
         position.y += duration.y * speed * delta;
-        if(duration.y >= -9.8f)
+        if (duration.y >= -9.8f)
             duration.add(0, -0.5f);
+        fixPosition();
     }
 
-    public void setHuh(Sound huh) {
-        this.huh = huh;
+    private void fixPosition() {
+        if(position.y < 0)
+            position.y = 0;
+        else if (position.y > MyGdxGame.HEIGHT - height) {
+            position.y = MyGdxGame.HEIGHT - height;
+            duration.y = 0;
+        }
     }
 }
