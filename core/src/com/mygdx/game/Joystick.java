@@ -11,7 +11,7 @@ public class Joystick {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Texture bgCircle, fgTexture;
-    private float bgCircleSize, fgTextureSize;
+    private float bgCircleSize, fgTextureSize, currentLength;
     private boolean isStatic = false;
     private Vector2 centerPosition = new Vector2(), activeCenterPosition = new Vector2();
     private Vector2 leftBottomPointOfCamera = new Vector2(), result = new Vector2();
@@ -43,6 +43,12 @@ public class Joystick {
                     fgTextureSize
             );
         }
+        if(!Gdx.input.isTouched() && result.x != 0 && result.y != 0)
+            resetResult();
+    }
+
+    private void resetResult() {
+        result.set(0, 0);
     }
 
     private void calculatePosition() {
@@ -73,7 +79,11 @@ public class Joystick {
     public void editResult(){
         Vector2 tmp = new Vector2(activeCenterPosition.x, activeCenterPosition.y);
         tmp = tmp.sub(centerPosition);
-        result.set(tmp.nor());
+        tmp = tmp.nor();
+        result.set(
+                tmp.x * (currentLength/(bgCircleSize/2f)),
+                tmp.y * (currentLength/(bgCircleSize/2f))
+        );
     }
 
     public Vector2 getResult(){
@@ -83,7 +93,8 @@ public class Joystick {
     public Vector2 limitVector(Vector2 origin, Vector2 target, float limit){
         Vector2 relativeVector = new Vector2(target.x, target.y);
         relativeVector.sub(origin);
-        if(relativeVector.len() > limit){
+        currentLength = relativeVector.len();
+        if(currentLength > limit){
             relativeVector.nor();
             relativeVector.set(
                     relativeVector.x * limit,

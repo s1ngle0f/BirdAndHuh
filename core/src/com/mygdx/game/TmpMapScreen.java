@@ -88,14 +88,7 @@ public class TmpMapScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(1,1,1,1);
-        world.step(1/60f, 6, 2);
-        if(Gdx.input.isKeyPressed(Input.Keys.A)){
-            camera.position.x += -10f;
-        }
-
-        if(Gdx.input.isKeyPressed(Input.Keys.D)){
-            camera.position.x += 10f;
-        }
+        camera.position.x += joystick.getResult().x * 10;
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
             player.body.applyForceToCenter(new Vector2(0, 30000), true);
@@ -103,12 +96,13 @@ public class TmpMapScreen implements Screen {
         camera.update();
 
         renderer.setView(camera);
-        renderer.render();
-        b2dr.render(world, camera.combined);
         batch.begin();
         joystick.render(delta);
         batch.setProjectionMatrix(camera.combined);
         batch.end();
+        renderer.render();
+        b2dr.render(world, camera.combined);
+        world.step(1/60f, 6, 2);
     }
 
     @Override
