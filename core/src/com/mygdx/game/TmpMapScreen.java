@@ -34,6 +34,8 @@ public class TmpMapScreen implements Screen {
     private Box2DDebugRenderer b2dr;
     private World world;
     private float unitScale = 1;
+
+    Player player;
     public TmpMapScreen(MyGdxGame myGdxGame, SpriteBatch batch, OrthographicCamera camera) {
         this.myGdxGame = myGdxGame;
         this.batch = batch;
@@ -64,6 +66,8 @@ public class TmpMapScreen implements Screen {
             fixtureDef.shape = shape;
             body.createFixture(fixtureDef);
         }
+
+        player = new Player(world);
     }
 
     @Override
@@ -74,6 +78,7 @@ public class TmpMapScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(1,1,1,1);
+        world.step(1/60f, 6, 2);
         if(Gdx.input.isKeyPressed(Input.Keys.A)){
             camera.position.x += -10f;
         }
