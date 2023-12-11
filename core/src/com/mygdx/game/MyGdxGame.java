@@ -13,6 +13,7 @@ public class MyGdxGame extends Game {
 	public HuhScreen huhScreen;
 	public MenuScreen menuScreen;
 	public GameScreen gameScreen;
+	public TmpMapScreen tmpMapScreen;
 
 	@Override
 	public void create () {
@@ -31,7 +32,8 @@ public class MyGdxGame extends Game {
 			throw new RuntimeException(e);
 		}
 		menuScreen = new MenuScreen(this, batch, camera);
-		setScreen(gameScreen);
+		tmpMapScreen = new TmpMapScreen(this, batch, camera);
+		setScreen(tmpMapScreen);
 	}
 	
 	@Override
