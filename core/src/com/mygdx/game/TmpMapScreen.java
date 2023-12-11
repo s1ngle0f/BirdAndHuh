@@ -34,18 +34,28 @@ public class TmpMapScreen implements Screen {
     private Box2DDebugRenderer b2dr;
     private World world;
     private float unitScale = 1;
-
+    private Joystick joystick;
     Player player;
     public TmpMapScreen(MyGdxGame myGdxGame, SpriteBatch batch, OrthographicCamera camera) {
         this.myGdxGame = myGdxGame;
         this.batch = batch;
         this.camera = camera;
 
+        joystick = new Joystick(
+                batch,
+                camera,
+                new Texture("bgJoystick.png"),
+                new Texture("fgStick.png"),
+                400,
+                100
+        );
+
+
         tmxMapLoader = new TmxMapLoader();
         tiledMap = tmxMapLoader.load("tilemaps/example.tmx");
         renderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
 
-        world = new World(new Vector2(0, -9.8f), true);
+        world = new World(new Vector2(0, -200f), true);
 
         BodyDef bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
@@ -86,12 +96,17 @@ public class TmpMapScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.D)){
             camera.position.x += 10f;
         }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.W)){
+            player.body.applyForceToCenter(new Vector2(0, 30000), true);
+        }
         camera.update();
 
         renderer.setView(camera);
         renderer.render();
         b2dr.render(world, camera.combined);
         batch.begin();
+        joystick.render(delta);
         batch.setProjectionMatrix(camera.combined);
         batch.end();
     }

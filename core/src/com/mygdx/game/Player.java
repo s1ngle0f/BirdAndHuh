@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Player extends Sprite {
     private World world;
-    private Body body;
+    public Body body;
 
     public Player(World world){
         this.world = world;
