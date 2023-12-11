@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector4;
 
 public class Joystick {
     private SpriteBatch batch;
@@ -12,7 +13,6 @@ public class Joystick {
     private Texture bgCircle, fgTexture;
     private float bgCircleSize, fgTextureSize;
     private boolean isStatic = false;
-    private Vector2 position = new Vector2(), activePosition = new Vector2();
     private Vector2 centerPosition = new Vector2(), activeCenterPosition = new Vector2();
     private Vector2 leftBottomPointOfCamera = new Vector2(), result = new Vector2();
 
@@ -27,17 +27,18 @@ public class Joystick {
 
     public void render(float delta){
         calculatePosition();
-        System.out.println(activeCenterPosition);
+        editResult();
+        System.out.println(result);
         if(isStatic || Gdx.input.isTouched()){
             batch.draw( bgCircle,
-                    position.x,
-                    position.y,
+                    leftBottomPointOfCamera.x + centerPosition.x - bgCircleSize/2f,
+                    leftBottomPointOfCamera.y + centerPosition.y - bgCircleSize/2f,
                     bgCircleSize,
                     bgCircleSize
             );
             batch.draw( fgTexture,
-                    activePosition.x,
-                    activePosition.y,
+                    leftBottomPointOfCamera.x + activeCenterPosition.x - fgTextureSize/2f,
+                    leftBottomPointOfCamera.y + activeCenterPosition.y - fgTextureSize/2f,
                     fgTextureSize,
                     fgTextureSize
             );
@@ -50,30 +51,50 @@ public class Joystick {
                 camera.position.y - camera.viewportHeight/2f
         );
         if(isStatic)
-            position.set(
+            centerPosition.set(
                     leftBottomPointOfCamera.x + bgCircleSize * 0.2f,
                     leftBottomPointOfCamera.y + bgCircleSize * 0.2f
             );
         else if (Gdx.input.justTouched()) {
-            position.set(
-                    leftBottomPointOfCamera.x + (Gdx.input.getX()) - bgCircleSize/2f,
-                    leftBottomPointOfCamera.y + (camera.viewportHeight - Gdx.input.getY()) - bgCircleSize/2f
-            );
             centerPosition.set(
                     (Gdx.input.getX()),
                     (camera.viewportHeight - Gdx.input.getY())
             );
         }
         if(Gdx.input.isTouched()){
-            activePosition.set(
-                    leftBottomPointOfCamera.x + (Gdx.input.getX()) - fgTextureSize/2f,
-                    leftBottomPointOfCamera.y + (camera.viewportHeight - Gdx.input.getY()) - fgTextureSize/2f
-            );
             activeCenterPosition.set(
                     (Gdx.input.getX()),
                     (camera.viewportHeight - Gdx.input.getY())
             );
         }
+        activeCenterPosition = limitVector(centerPosition, activeCenterPosition, bgCircleSize/2f);
+    }
+
+    public void editResult(){
+        Vector2 tmp = new Vector2(activeCenterPosition.x, activeCenterPosition.y);
+        tmp = tmp.sub(centerPosition);
+        result.set(tmp.nor());
+    }
+
+    public Vector2 getResult(){
+        return result;
+    }
+
+    public Vector2 limitVector(Vector2 origin, Vector2 target, float limit){
+        Vector2 relativeVector = new Vector2(target.x, target.y);
+        relativeVector.sub(origin);
+        if(relativeVector.len() > limit){
+            relativeVector.nor();
+            relativeVector.set(
+                    relativeVector.x * limit,
+                    relativeVector.y * limit
+            );
+        }
+        target = new Vector2(
+                origin.x + relativeVector.x,
+                origin.y + relativeVector.y
+        );
+        return target;
     }
 
     public boolean isStatic() {

@@ -46,8 +46,8 @@ public class TmpMapScreen implements Screen {
                 camera,
                 new Texture("bgJoystick.png"),
                 new Texture("fgStick.png"),
-                400,
-                100
+                200,
+                50
         );
 
 
