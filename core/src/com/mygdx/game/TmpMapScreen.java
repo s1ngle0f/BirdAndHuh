@@ -90,16 +90,16 @@ public class TmpMapScreen implements Screen {
         ScreenUtils.clear(1,1,1,1);
         camera.position.x += joystick.getResult().x * 10;
 
-        if(Gdx.input.isKeyPressed(Input.Keys.W)){
+        if(joystick.getResult().y >= 0.75f){
             player.body.applyForceToCenter(new Vector2(0, 30000), true);
         }
         camera.update();
 
-        renderer.setView(camera);
         batch.begin();
         joystick.render(delta);
         batch.setProjectionMatrix(camera.combined);
         batch.end();
+        renderer.setView(camera);
         renderer.render();
         b2dr.render(world, camera.combined);
         world.step(1/60f, 6, 2);

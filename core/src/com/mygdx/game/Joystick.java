@@ -12,7 +12,7 @@ public class Joystick {
     private OrthographicCamera camera;
     private Texture bgCircle, fgTexture;
     private float bgCircleSize, fgTextureSize, currentLength;
-    private boolean isStatic = false;
+    private boolean isStatic = true;
     private Vector2 centerPosition = new Vector2(), activeCenterPosition = new Vector2();
     private Vector2 leftBottomPointOfCamera = new Vector2(), result = new Vector2();
 
@@ -49,6 +49,7 @@ public class Joystick {
 
     private void resetResult() {
         result.set(0, 0);
+        activeCenterPosition.set(centerPosition);
     }
 
     private void calculatePosition() {
@@ -58,8 +59,8 @@ public class Joystick {
         );
         if(isStatic)
             centerPosition.set(
-                    leftBottomPointOfCamera.x + bgCircleSize * 0.2f,
-                    leftBottomPointOfCamera.y + bgCircleSize * 0.2f
+                    bgCircleSize * 1.2f,
+                    bgCircleSize * 1.2f
             );
         else if (Gdx.input.justTouched()) {
             centerPosition.set(
