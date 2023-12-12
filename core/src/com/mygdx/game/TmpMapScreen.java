@@ -3,8 +3,10 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
@@ -21,6 +23,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -36,6 +39,10 @@ public class TmpMapScreen implements Screen {
     private float unitScale = 1;
     private Joystick joystick;
     Player player;
+    Hud hud;
+    Label testLabel;
+    Button button;
+
     public TmpMapScreen(MyGdxGame myGdxGame, SpriteBatch batch, OrthographicCamera camera) {
         this.myGdxGame = myGdxGame;
         this.batch = batch;
@@ -50,6 +57,10 @@ public class TmpMapScreen implements Screen {
                 50
         );
 
+        hud = new Hud(batch);
+        testLabel = new Label("Cago", new Label.LabelStyle(new BitmapFont(), Color.BROWN));
+        button = new Button(new Texture("badlogic.jpg"), batch,
+                100, 50, new Vector2(100, 100));
 
         tmxMapLoader = new TmxMapLoader();
         tiledMap = tmxMapLoader.load("tilemaps/example.tmx");
@@ -88,17 +99,30 @@ public class TmpMapScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(1,1,1,1);
+        MyGdxGame.leftBottomPointCamera.set(
+                (int)(camera.position.x) - MyGdxGame.WIDTH/2,
+                (int)(camera.position.y) - MyGdxGame.HEIGHT/2
+        );
         camera.position.x += joystick.getResult().x * 10;
 
         if(joystick.getResult().y >= 0.75f){
             player.body.applyForceToCenter(new Vector2(0, 30000), true);
         }
         camera.update();
-
+//        batch.setProjectionMatrix(hud.stage.getCamera().combined);
+//        hud.stage.draw();
         batch.begin();
+        testLabel.setFontScale(25);
+        testLabel.setPosition(100, 100);
+        testLabel.draw(batch, 1);
         joystick.render(delta);
-        batch.setProjectionMatrix(camera.combined);
+        button.draw();
         batch.end();
+
+        if(button.isHit())
+            System.out.println("GUGUGAGA");
+
+        batch.setProjectionMatrix(camera.combined);
         renderer.setView(camera);
         renderer.render();
         b2dr.render(world, camera.combined);

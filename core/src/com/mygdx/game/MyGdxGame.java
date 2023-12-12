@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 public class MyGdxGame extends Game {
 	SpriteBatch batch;
@@ -14,7 +15,7 @@ public class MyGdxGame extends Game {
 	public MenuScreen menuScreen;
 	public GameScreen gameScreen;
 	public TmpMapScreen tmpMapScreen;
-
+	public static Vector2 leftBottomPointCamera = new Vector2();
 	@Override
 	public void create () {
 		HEIGHT = Gdx.graphics.getHeight();
@@ -24,6 +25,11 @@ public class MyGdxGame extends Game {
 		camera = new OrthographicCamera();
 //		camera.setToOrtho(false, CAM_WIDTH, CAM_HEIGHT);
 		camera.setToOrtho(false, WIDTH, HEIGHT);
+
+		leftBottomPointCamera.set(
+				(int)(camera.position.x) - MyGdxGame.WIDTH/2,
+				(int)(camera.position.y) - MyGdxGame.HEIGHT/2
+		);
 
 		huhScreen = new HuhScreen(this, batch, camera);
 		try {

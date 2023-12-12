@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,7 +13,7 @@ public class Joystick {
     private OrthographicCamera camera;
     private Texture bgCircle, fgTexture;
     private float bgCircleSize, fgTextureSize, currentLength;
-    private boolean isStatic = true;
+    private boolean isStatic = true, isTouchedInsideCircle = false;
     private Vector2 centerPosition = new Vector2(), activeCenterPosition = new Vector2();
     private Vector2 leftBottomPointOfCamera = new Vector2(), result = new Vector2();
 
@@ -28,7 +29,7 @@ public class Joystick {
     public void render(float delta){
         calculatePosition();
         editResult();
-        System.out.println(result);
+//        System.out.println(result);
         if(isStatic || Gdx.input.isTouched()){
             batch.draw( bgCircle,
                     leftBottomPointOfCamera.x + centerPosition.x - bgCircleSize/2f,
@@ -49,6 +50,7 @@ public class Joystick {
 
     private void resetResult() {
         result.set(0, 0);
+        isTouchedInsideCircle = false;
         activeCenterPosition.set(centerPosition);
     }
 
@@ -57,18 +59,26 @@ public class Joystick {
                 camera.position.x - camera.viewportWidth/2f,
                 camera.position.y - camera.viewportHeight/2f
         );
-        if(isStatic)
+        if(isStatic) {
             centerPosition.set(
                     bgCircleSize * 1.2f,
                     bgCircleSize * 1.2f
             );
-        else if (Gdx.input.justTouched()) {
+            if(Gdx.input.isTouched() &&
+                    new Vector2(Gdx.input.getX(), Gdx.input.getY()).sub(
+                            centerPosition.x,
+                            centerPosition.y
+                    ).len() <= bgCircleSize/2f){
+                isTouchedInsideCircle = true;
+            }
+        }
+        else if (Gdx.input.justTouched() && !Gdx.input.isTouched()) {
             centerPosition.set(
                     (Gdx.input.getX()),
                     (camera.viewportHeight - Gdx.input.getY())
             );
         }
-        if(Gdx.input.isTouched()){
+        if(Gdx.input.isTouched() && (!isStatic || isTouchedInsideCircle)){
             activeCenterPosition.set(
                     (Gdx.input.getX()),
                     (camera.viewportHeight - Gdx.input.getY())

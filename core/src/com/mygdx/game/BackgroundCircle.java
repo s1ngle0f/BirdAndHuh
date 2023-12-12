@@ -42,7 +42,7 @@ public class BackgroundCircle {
                     height
             );
         }
-        System.out.println("Start point: " + startPoint + "; Position: " + (((int)(camera.position.x) - MyGdxGame.WIDTH/2)));
+//        System.out.println("Start point: " + startPoint + "; Position: " + (((int)(camera.position.x) - MyGdxGame.WIDTH/2)));
     }
 
     public Texture getBackground() {

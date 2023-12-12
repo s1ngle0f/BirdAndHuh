@@ -114,10 +114,10 @@ public class Columns {
             }
         }
         ListUtil.<Column>shiftListLeft(columns);
-        for(Column column : columns){
-            System.out.print(column + ", ");
-        }
-        System.out.println("");
+//        for(Column column : columns){
+//            System.out.print(column + ", ");
+//        }
+//        System.out.println("");
     }
 
     private void generateNewPositionForColumn(Column column) {
