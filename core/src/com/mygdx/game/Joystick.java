@@ -61,11 +61,11 @@ public class Joystick {
         );
         if(isStatic) {
             centerPosition.set(
-                    bgCircleSize * 1.2f,
+                    bgCircleSize + 30,
                     bgCircleSize * 1.2f
             );
             if(Gdx.input.isTouched() &&
-                    new Vector2(Gdx.input.getX(), Gdx.input.getY()).sub(
+                    new Vector2(Gdx.input.getX(), MyGdxGame.HEIGHT - Gdx.input.getY()).sub(
                             centerPosition.x,
                             centerPosition.y
                     ).len() <= bgCircleSize/2f){
